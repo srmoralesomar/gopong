@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	ScoreFontFace *text.GoTextFace
+	ScoreFontFace  *text.GoTextFace
+	ButtonFontFace *text.GoTextFace
 )
 
 func initAssets() {
@@ -20,5 +21,9 @@ func initAssets() {
 	ScoreFontFace = &text.GoTextFace{
 		Source: s,
 		Size:   48,
+	}
+	ButtonFontFace = &text.GoTextFace{
+		Source: s,
+		Size:   24,
 	}
 }
