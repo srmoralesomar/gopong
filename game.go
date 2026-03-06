@@ -34,7 +34,6 @@ type Game struct {
 }
 
 func NewGame() *Game {
-	
 	g := &Game{
 		state:       StateServe,
 		leftPaddle:  NewPaddle(50, ScreenHeight/2-50, 15, 100),
@@ -57,7 +56,7 @@ func (g *Game) startPlay() {
 
 func (g *Game) Update() error {
 	g.leftPaddle.UpdateLeft()
-	
+
 	switch g.state {
 	case StateServe:
 		if ebiten.IsKeyPressed(ebiten.KeySpace) {
@@ -66,11 +65,11 @@ func (g *Game) Update() error {
 	case StatePlay:
 		g.rightPaddle.UpdateRightCPU(g.ball)
 		g.ball.Update()
-		
+
 		// Check collisions
 		ResolveCollisions(g.ball, g.leftPaddle)
 		ResolveCollisions(g.ball, g.rightPaddle)
-		
+
 		// Check scoring boundaries
 		if g.ball.X-g.ball.Radius < 0 {
 			g.scoreRight++
@@ -88,11 +87,11 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	screen.Fill(color.RGBA{0, 0, 0, 255})
-	
+
 	g.leftPaddle.Draw(screen)
 	g.rightPaddle.Draw(screen)
 	g.ball.Draw(screen)
-	
+
 	scoreStr := fmt.Sprintf("%d - %d", g.scoreLeft, g.scoreRight)
 	op := &text.DrawOptions{}
 	op.GeoM.Translate(float64(ScreenWidth/2-50), 20)

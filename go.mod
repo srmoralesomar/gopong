@@ -1,4 +1,4 @@
-module github.com/omarmorales/gopong2
+module github.com/omarmorales/gopong
 
 go 1.24.0
 
