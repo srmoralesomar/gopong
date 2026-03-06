@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"image/color"
-	"math/rand"
-	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
@@ -17,6 +15,14 @@ const (
 	StatePlay
 )
 
+type Player int
+
+const (
+	PlayerNone Player = iota
+	PlayerLeft
+	PlayerRight
+)
+
 type Game struct {
 	state       GameState
 	leftPaddle  *Paddle
@@ -24,23 +30,24 @@ type Game struct {
 	ball        *Ball
 	scoreLeft   int
 	scoreRight  int
+	lastWinner  Player // Tracks who won the last point
 }
 
 func NewGame() *Game {
-	rand.Seed(time.Now().UnixNano())
 	
 	g := &Game{
 		state:       StateServe,
 		leftPaddle:  NewPaddle(50, ScreenHeight/2-50, 15, 100),
 		rightPaddle: NewPaddle(ScreenWidth-50-15, ScreenHeight/2-50, 15, 100),
 		ball:        NewBall(ScreenWidth/2, ScreenHeight/2, 10),
+		lastWinner:  PlayerNone,
 	}
 	g.serve()
 	return g
 }
 
 func (g *Game) serve() {
-	g.ball.Reset(ScreenWidth/2, ScreenHeight/2)
+	g.ball.Reset(ScreenWidth/2, ScreenHeight/2, int(g.lastWinner))
 	g.state = StateServe
 }
 
@@ -67,9 +74,11 @@ func (g *Game) Update() error {
 		// Check scoring boundaries
 		if g.ball.X-g.ball.Radius < 0 {
 			g.scoreRight++
+			g.lastWinner = PlayerRight
 			g.serve()
 		} else if g.ball.X+g.ball.Radius > ScreenWidth {
 			g.scoreLeft++
+			g.lastWinner = PlayerLeft
 			g.serve()
 		}
 	}

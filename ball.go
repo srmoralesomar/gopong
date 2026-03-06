@@ -30,22 +30,31 @@ func NewBall(x, y, radius float64) *Ball {
 		Y:      y,
 		Radius: radius,
 	}
-	b.Reset(x, y)
+	b.Reset(x, y, 0) // 0 is PlayerNone
 	return b
 }
 
-func (b *Ball) Reset(x, y float64) {
+func (b *Ball) Reset(x, y float64, winner int) {
 	b.X = x
 	b.Y = y
 	b.Speed = InitialBallSpeed
 
-	// Start at a random angle either to the left or right, bounded safely
+	// Angle logic relative to the winner
 	// We want roughly an angle between -45 deg (-pi/4) and +45 deg (pi/4)
 	angle := (rand.Float64() * math.Pi / 2) - (math.Pi / 4)
 	
-	// Randomly flip to the other side (leftwards)
-	if rand.Intn(2) == 0 {
+	switch winner {
+	case 1: // PlayerLeft
+		// Serve towards right (angle is already facing right)
+	case 2: // PlayerRight
+		// Serve towards left
 		angle += math.Pi
+	default:
+		// PlayerNone (Game Start)
+		// Randomly choose left or right
+		if rand.Intn(2) == 0 {
+			angle += math.Pi
+		}
 	}
 
 	b.Vx = math.Cos(angle)
