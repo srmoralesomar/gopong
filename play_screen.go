@@ -91,12 +91,20 @@ func (p *PlayScreen) Update() error {
 		// Check scoring boundaries
 		if p.ball.X-p.ball.Radius < 0 {
 			p.scoreRight++
-			p.lastWinner = PlayerRight
-			p.serve()
+			if p.scoreRight >= 10 {
+				p.game.SwitchScreen(NewEndScreen(p.game, p.scoreLeft, p.scoreRight, false, p.difficulty))
+			} else {
+				p.lastWinner = PlayerRight
+				p.serve()
+			}
 		} else if p.ball.X+p.ball.Radius > ScreenWidth {
 			p.scoreLeft++
-			p.lastWinner = PlayerLeft
-			p.serve()
+			if p.scoreLeft >= 10 {
+				p.game.SwitchScreen(NewEndScreen(p.game, p.scoreLeft, p.scoreRight, true, p.difficulty))
+			} else {
+				p.lastWinner = PlayerLeft
+				p.serve()
+			}
 		}
 	}
 
