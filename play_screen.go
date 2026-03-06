@@ -60,6 +60,11 @@ func (p *PlayScreen) startPlay() {
 func (p *PlayScreen) Update() error {
 	p.leftPaddle.UpdateLeft()
 
+	if ebiten.IsKeyPressed(ebiten.KeyQ) {
+		p.game.SwitchScreen(NewStartScreen(p.game))
+		return nil
+	}
+
 	switch p.state {
 	case StateServe:
 		if ebiten.IsKeyPressed(ebiten.KeySpace) {
