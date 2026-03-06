@@ -10,26 +10,39 @@ import (
 )
 
 type StartScreen struct {
-	game      *Game
-	isHovered bool
+	game         *Game
+	hoveredIndex int
 }
 
 func NewStartScreen(g *Game) *StartScreen {
-	return &StartScreen{game: g}
+	return &StartScreen{game: g, hoveredIndex: -1}
 }
 
 func (s *StartScreen) Update() error {
 	buttonWidth := float32(200)
 	buttonHeight := float32(80)
-	buttonX := float32(ScreenWidth/2) - buttonWidth/2
-	buttonY := float32(ScreenHeight/2) - buttonHeight/2
+	buttonGap := float32(20)
 
-	// Check hover state
+	labels := []string{"Easy", "Medium", "Hard"}
+	numButtons := len(labels)
+	totalHeight := float32(numButtons)*buttonHeight + float32(numButtons-1)*buttonGap
+
+	startX := float32(ScreenWidth/2) - buttonWidth/2
+	startY := float32(ScreenHeight/2) - totalHeight/2
+
+	s.hoveredIndex = -1
+
 	x, y := ebiten.CursorPosition()
 	fx, fy := float32(x), float32(y)
-	s.isHovered = fx >= buttonX && fx <= buttonX+buttonWidth && fy >= buttonY && fy <= buttonY+buttonHeight
 
-	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) && s.isHovered {
+	for i := 0; i < numButtons; i++ {
+		by := startY + float32(i)*(buttonHeight+buttonGap)
+		if fx >= startX && fx <= startX+buttonWidth && fy >= by && fy <= by+buttonHeight {
+			s.hoveredIndex = i
+		}
+	}
+
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) && s.hoveredIndex != -1 {
 		s.game.SwitchScreen(NewPlayScreen(s.game))
 	}
 
@@ -37,8 +50,11 @@ func (s *StartScreen) Update() error {
 	for _, id := range touchIDs {
 		tx, ty := ebiten.TouchPosition(id)
 		tfx, tfy := float32(tx), float32(ty)
-		if tfx >= buttonX && tfx <= buttonX+buttonWidth && tfy >= buttonY && tfy <= buttonY+buttonHeight {
-			s.game.SwitchScreen(NewPlayScreen(s.game))
+		for i := 0; i < numButtons; i++ {
+			by := startY + float32(i)*(buttonHeight+buttonGap)
+			if tfx >= startX && tfx <= startX+buttonWidth && tfy >= by && tfy <= by+buttonHeight {
+				s.game.SwitchScreen(NewPlayScreen(s.game))
+			}
 		}
 	}
 
@@ -51,37 +67,46 @@ func (s *StartScreen) Draw(screen *ebiten.Image) {
 
 	buttonWidth := float32(200)
 	buttonHeight := float32(80)
-	buttonX := float32(ScreenWidth/2) - buttonWidth/2
-	buttonY := float32(ScreenHeight/2) - buttonHeight/2
+	buttonGap := float32(20)
 
-	// Button colors based on hover
-	var bgColor, textColor color.Color
-	if s.isHovered {
-		bgColor = color.White
-		textColor = color.Black
-	} else {
-		bgColor = color.Black
-		textColor = color.White
+	labels := []string{"Easy", "Medium", "Hard"}
+	numButtons := len(labels)
+	totalHeight := float32(numButtons)*buttonHeight + float32(numButtons-1)*buttonGap
+
+	startX := float32(ScreenWidth/2) - buttonWidth/2
+	startY := float32(ScreenHeight/2) - totalHeight/2
+
+	for i, label := range labels {
+		by := startY + float32(i)*(buttonHeight+buttonGap)
+		isHovered := s.hoveredIndex == i
+
+		var bgColor, textColor color.Color
+		if isHovered {
+			bgColor = color.White
+			textColor = color.Black
+		} else {
+			bgColor = color.Black
+			textColor = color.White
+		}
+
+		// Draw Button background (and border if not hovered)
+		if isHovered {
+			vector.FillRect(screen, startX, by, buttonWidth, buttonHeight, bgColor, true)
+		} else {
+			// Draw white border
+			vector.StrokeRect(screen, startX, by, buttonWidth, buttonHeight, 2, color.White, true)
+		}
+
+		w, h := text.Measure(label, ButtonFontFace, ButtonFontFace.Size) // line spacing doesn't matter for single line
+
+		// Calculate center offset
+		textX := float64(startX) + (float64(buttonWidth)-w)/2
+		textY := float64(by) + (float64(buttonHeight)-h)/2
+
+		op := &text.DrawOptions{}
+		op.GeoM.Translate(textX, textY)
+		op.ColorScale.ScaleWithColor(textColor)
+
+		text.Draw(screen, label, ButtonFontFace, op)
 	}
-
-	// Draw Button background (and border if not hovered)
-	if s.isHovered {
-		vector.FillRect(screen, buttonX, buttonY, buttonWidth, buttonHeight, bgColor, true)
-	} else {
-		// Draw white border
-		vector.StrokeRect(screen, buttonX, buttonY, buttonWidth, buttonHeight, 2, color.White, true)
-	}
-
-	msg := "START"
-	w, h := text.Measure(msg, ButtonFontFace, ButtonFontFace.Size) // line spacing doesn't matter for single line
-
-	// Calculate center offset
-	textX := float64(buttonX) + (float64(buttonWidth) - w) / 2
-	textY := float64(buttonY) + (float64(buttonHeight) - h) / 2
-
-	op := &text.DrawOptions{}
-	op.GeoM.Translate(textX, textY)
-	op.ColorScale.ScaleWithColor(textColor)
-	
-	text.Draw(screen, msg, ButtonFontFace, op)
 }
