@@ -51,11 +51,12 @@ func (g *Game) startPlay() {
 func (g *Game) Update() error {
 	g.leftPaddle.UpdateLeft()
 	
-	if g.state == StateServe {
+	switch g.state {
+	case StateServe:
 		if ebiten.IsKeyPressed(ebiten.KeySpace) {
 			g.startPlay()
 		}
-	} else if g.state == StatePlay {
+	case StatePlay:
 		g.rightPaddle.UpdateRightCPU(g.ball)
 		g.ball.Update()
 		

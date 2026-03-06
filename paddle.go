@@ -67,5 +67,5 @@ func (p *Paddle) UpdateRightCPU(ball *Ball) {
 
 func (p *Paddle) Draw(screen *ebiten.Image) {
 	// Draw a white rectangle
-	vector.DrawFilledRect(screen, float32(p.X), float32(p.Y), float32(p.Width), float32(p.Height), color.White, true)
+	vector.FillRect(screen, float32(p.X), float32(p.Y), float32(p.Width), float32(p.Height), color.White, true)
 }

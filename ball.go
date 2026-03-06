@@ -11,7 +11,7 @@ import (
 
 const (
 	InitialBallSpeed = 4.0
-	MaxBallSpeed     = 18.0
+	MaxBallSpeed     = 12.0
 	SpeedIncrement   = 0.5
 )
 
@@ -68,7 +68,7 @@ func (b *Ball) Update() {
 
 func (b *Ball) Draw(screen *ebiten.Image) {
 	// Draw a white circle
-	vector.DrawFilledCircle(screen, float32(b.X), float32(b.Y), float32(b.Radius), color.White, true)
+	vector.FillCircle(screen, float32(b.X), float32(b.Y), float32(b.Radius), color.White, true)
 }
 
 func (b *Ball) IncreaseSpeed() {

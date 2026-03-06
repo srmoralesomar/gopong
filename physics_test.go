@@ -6,9 +6,7 @@ import (
 )
 
 // Helper function to test float equality with epsilon
-func floatEquals(a, b, epsilon float64) bool {
-	return math.Abs(a-b) < epsilon
-}
+// removed: floatEquals
 
 func TestResolveCollisions_FrontHit(t *testing.T) {
 	// Setup: Player paddle is on the left
