@@ -43,7 +43,7 @@ func (s *StartScreen) Update() error {
 	}
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) && s.hoveredIndex != -1 {
-		s.game.SwitchScreen(NewPlayScreen(s.game))
+		s.game.SwitchScreen(NewPlayScreen(s.game, Difficulty(s.hoveredIndex)))
 	}
 
 	touchIDs := inpututil.AppendJustPressedTouchIDs(nil)
@@ -53,7 +53,7 @@ func (s *StartScreen) Update() error {
 		for i := 0; i < numButtons; i++ {
 			by := startY + float32(i)*(buttonHeight+buttonGap)
 			if tfx >= startX && tfx <= startX+buttonWidth && tfy >= by && tfy <= by+buttonHeight {
-				s.game.SwitchScreen(NewPlayScreen(s.game))
+				s.game.SwitchScreen(NewPlayScreen(s.game, Difficulty(i)))
 			}
 		}
 	}

@@ -16,6 +16,14 @@ const (
 	StatePlay
 )
 
+type Difficulty int
+
+const (
+	DifficultyEasy Difficulty = iota
+	DifficultyMedium
+	DifficultyHard
+)
+
 type Player int
 
 const (
@@ -33,9 +41,10 @@ type PlayScreen struct {
 	scoreLeft   int
 	scoreRight  int
 	lastWinner  Player
+	difficulty  Difficulty
 }
 
-func NewPlayScreen(g *Game) *PlayScreen {
+func NewPlayScreen(g *Game, diff Difficulty) *PlayScreen {
 	p := &PlayScreen{
 		game:        g,
 		state:       StateServe,
@@ -43,6 +52,7 @@ func NewPlayScreen(g *Game) *PlayScreen {
 		rightPaddle: NewPaddle(ScreenWidth-50-15, float64(GameAreaTop+(GameAreaBottom-GameAreaTop)/2-50), 15, 100),
 		ball:        NewBall(ScreenWidth/2, float64(GameAreaTop+(GameAreaBottom-GameAreaTop)/2), 10),
 		lastWinner:  PlayerNone,
+		difficulty:  diff,
 	}
 	p.serve()
 	return p
@@ -71,7 +81,7 @@ func (p *PlayScreen) Update() error {
 			p.startPlay()
 		}
 	case StatePlay:
-		p.rightPaddle.UpdateRightCPU(p.ball)
+		p.rightPaddle.UpdateRightCPU(p.ball, p.difficulty)
 		p.ball.Update()
 
 		// Check collisions
