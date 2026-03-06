@@ -33,12 +33,12 @@ func (p *Paddle) UpdateLeft() {
 		p.Y += PaddleSpeed
 	}
 
-	// Stay within screen bounds
-	if p.Y < 0 {
-		p.Y = 0
+	// Stay within bounds
+	if p.Y < float64(GameAreaTop) {
+		p.Y = float64(GameAreaTop)
 	}
-	if p.Y+p.Height > ScreenHeight {
-		p.Y = ScreenHeight - p.Height
+	if p.Y+p.Height > float64(GameAreaBottom) {
+		p.Y = float64(GameAreaBottom) - p.Height
 	}
 }
 
@@ -57,11 +57,11 @@ func (p *Paddle) UpdateRightCPU(ball *Ball) {
 		p.Y = targetY // Snap to target if very close
 	}
 
-	if p.Y < 0 {
-		p.Y = 0
+	if p.Y < float64(GameAreaTop) {
+		p.Y = float64(GameAreaTop)
 	}
-	if p.Y+p.Height > ScreenHeight {
-		p.Y = ScreenHeight - p.Height
+	if p.Y+p.Height > float64(GameAreaBottom) {
+		p.Y = float64(GameAreaBottom) - p.Height
 	}
 }
 

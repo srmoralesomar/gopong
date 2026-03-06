@@ -66,11 +66,11 @@ func (b *Ball) Update() {
 	b.Y += b.Vy * b.Speed
 
 	// Top and bottom screen bounds collisions
-	if b.Y-b.Radius < 0 {
-		b.Y = b.Radius // Positional correction
+	if b.Y-b.Radius < float64(GameAreaTop) {
+		b.Y = float64(GameAreaTop) + b.Radius // Positional correction
 		b.Vy = math.Abs(b.Vy) // Ensure positive Y velocity
-	} else if b.Y+b.Radius > ScreenHeight {
-		b.Y = ScreenHeight - b.Radius // Positional correction
+	} else if b.Y+b.Radius > float64(GameAreaBottom) {
+		b.Y = float64(GameAreaBottom) - b.Radius // Positional correction
 		b.Vy = -math.Abs(b.Vy) // Ensure negative Y velocity
 	}
 }

@@ -7,8 +7,12 @@ import (
 )
 
 const (
-	ScreenWidth  = 800
-	ScreenHeight = 600
+	ScreenWidth    = 800
+	ScreenHeight   = 600
+	HeaderHeight   = 60
+	FooterHeight   = 80
+	GameAreaTop    = HeaderHeight
+	GameAreaBottom = ScreenHeight - FooterHeight
 )
 
 func main() {
