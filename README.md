@@ -1,8 +1,10 @@
 # Go Pong
 
+![Go Pong](assets/gameplay.gif)
+
 A classic Pong clone built with Go and the [Ebitengine](https://ebitengine.org/) 2D game library. 
 
-This project aims to provide a robust, readable foundation for a 2D paddle-and-ball game, demonstrating advanced continuous collision detection (CCD) and a clean separation between game state, physics, and rendering logic.
+This project aims to provide a robust foundation for a 2D paddle-and-ball game, demonstrating advanced continuous collision detection (CCD) and a clean separation between game state, physics, and rendering logic.
 
 ## How to Play
 
